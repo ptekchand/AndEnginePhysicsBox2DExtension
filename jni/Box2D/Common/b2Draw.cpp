@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006-2010 Erin Catto http://www.gphysics.com
+* Copyright (c) 2011 Erin Catto http://box2d.org
 *
 * This software is provided 'as-is', without any express or implied
 * warranty.  In no event will the authors be held liable for any damages
@@ -16,36 +16,29 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef B2_TOI_SOLVER_H
-#define B2_TOI_SOLVER_H
+#include "Box2D/Common/b2Draw.h"
 
-#include "Box2D/Common/b2Math.h"
-
-class b2Contact;
-class b2Body;
-struct b2TOIConstraint;
-class b2StackAllocator;
-
-/// This is a pure position solver for a single movable body in contact with
-/// multiple non-moving bodies.
-class b2TOISolver
+b2Draw::b2Draw()
 {
-public:
-	b2TOISolver(b2StackAllocator* allocator);
-	~b2TOISolver();
+	m_drawFlags = 0;
+}
 
-	void Initialize(b2Contact** contacts, int32 contactCount, b2Body* toiBody);
-	void Clear();
+void b2Draw::SetFlags(uint32 flags)
+{
+	m_drawFlags = flags;
+}
 
-	// Perform one solver iteration. Returns true if converged.
-	bool Solve(float32 baumgarte);
+uint32 b2Draw::GetFlags() const
+{
+	return m_drawFlags;
+}
 
-private:
+void b2Draw::AppendFlags(uint32 flags)
+{
+	m_drawFlags |= flags;
+}
 
-	b2TOIConstraint* m_constraints;
-	int32 m_count;
-	b2Body* m_toiBody;
-	b2StackAllocator* m_allocator;
-};
-
-#endif
+void b2Draw::ClearFlags(uint32 flags)
+{
+	m_drawFlags &= ~flags;
+}

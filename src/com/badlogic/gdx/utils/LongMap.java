@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.utils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+//import com.badlogic.gdx.math.MathUtils;
 import org.andengine.util.math.MathUtils;
 
 /**
@@ -82,9 +84,9 @@ public class LongMap<V> {
 
 		threshold = (int)(capacity * loadFactor);
 		mask = capacity - 1;
-		hashShift = 31 - Integer.numberOfTrailingZeros(capacity);
-		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(capacity)) + 1);
-		pushIterations = Math.max(Math.min(capacity, 32), (int)Math.sqrt(capacity) / 4);
+		hashShift = 63 - Long.numberOfTrailingZeros(capacity);
+		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(capacity)) * 2);
+		pushIterations = Math.max(Math.min(capacity, 8), (int)Math.sqrt(capacity) / 8);
 
 		keyTable = new long[capacity + stashCapacity];
 		valueTable = (V[])new Object[keyTable.length];
@@ -285,6 +287,7 @@ public class LongMap<V> {
 		keyTable[index] = key;
 		valueTable[index] = value;
 		stashSize++;
+		size++;
 	}
 
 	public V get (long key) {
@@ -294,17 +297,30 @@ public class LongMap<V> {
 			index = hash2(key);
 			if (keyTable[index] != key) {
 				index = hash3(key);
-				if (keyTable[index] != key) return getStash(key);
+				if (keyTable[index] != key) return getStash(key, null);
 			}
 		}
 		return valueTable[index];
 	}
 
-	private V getStash (long key) {
+	public V get (long key, V defaultValue) {
+		if (key == 0) return zeroValue;
+		int index = (int)(key & mask);
+		if (keyTable[index] != key) {
+			index = hash2(key);
+			if (keyTable[index] != key) {
+				index = hash3(key);
+				if (keyTable[index] != key) return getStash(key, defaultValue);
+			}
+		}
+		return valueTable[index];
+	}
+
+	private V getStash (long key, V defaultValue) {
 		long[] keyTable = this.keyTable;
 		for (int i = capacity, n = i + stashSize; i < n; i++)
 			if (keyTable[i] == key) return valueTable[i];
-		return null;
+		return defaultValue;
 	}
 
 	public V remove (long key) {
@@ -428,6 +444,29 @@ public class LongMap<V> {
 		return false;
 	}
 
+	/** Returns the key for the specified value, or <tt>notFound</tt> if it is not in the map. Note this traverses the entire map
+	 * and compares every value, which may be an expensive operation.
+	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
+	 *           {@link #equals(Object)}. */
+	public long findKey (Object value, boolean identity, long notFound) {
+		V[] valueTable = this.valueTable;
+		if (value == null) {
+			if (hasZeroValue && zeroValue == null) return 0;
+			long[] keyTable = this.keyTable;
+			for (int i = capacity + stashSize; i-- > 0;)
+				if (keyTable[i] != EMPTY && valueTable[i] == null) return keyTable[i];
+		} else if (identity) {
+			if (value == zeroValue) return 0;
+			for (int i = capacity + stashSize; i-- > 0;)
+				if (valueTable[i] == value) return keyTable[i];
+		} else {
+			if (hasZeroValue && value.equals(zeroValue)) return 0;
+			for (int i = capacity + stashSize; i-- > 0;)
+				if (value.equals(valueTable[i])) return keyTable[i];
+		}
+		return notFound;
+	}
+
 	/**
 	 * Increases the size of the backing array to acommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.
@@ -443,9 +482,9 @@ public class LongMap<V> {
 		capacity = newSize;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		hashShift = 31 - Integer.numberOfTrailingZeros(newSize);
-		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(newSize)));
-		pushIterations = Math.max(Math.min(capacity, 32), (int)Math.sqrt(capacity) / 4);
+		hashShift = 63 - Long.numberOfTrailingZeros(newSize);
+		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(newSize)) * 2);
+		pushIterations = Math.max(Math.min(newSize, 8), (int)Math.sqrt(newSize) / 8);
 
 		long[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
@@ -652,6 +691,13 @@ public class LongMap<V> {
 			return this;
 		}
 
+		/** Returns a new array containing the remaining values. */
+		public Array<V> toArray () {
+			Array array = new Array(true, map.size);
+			while (hasNext)
+				array.add(next());
+			return array;
+		}
 	}
 
 	static public class Keys extends MapIterator {
@@ -666,5 +712,12 @@ public class LongMap<V> {
 			return key;
 		}
 
+		/** Returns a new array containing the remaining values. */
+		public LongArray toArray () {
+			LongArray array = new LongArray(true, map.size);
+			while (hasNext)
+				array.add(next());
+			return array;
+		}
 	}
 }
