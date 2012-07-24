@@ -15,26 +15,7 @@ LOCAL_LDLIBS := -llog
 
 LOCAL_ARM_MODE := arm
 LOCAL_SRC_FILES := \
-Box2D/Body.cpp \
-Box2D/CircleShape.cpp \
-Box2D/Contact.cpp \
-Box2D/Fixture.cpp \
-Box2D/Joint.cpp \
-Box2D/PolygonShape.cpp \
-Box2D/Shape.cpp \
-Box2D/World.cpp \
-Box2D/Box2D.h \
-Box2D/DistanceJoint.cpp \
-Box2D/FrictionJoint.cpp \
-Box2D/GearJoint.cpp \
-Box2D/LineJoint.cpp \
-Box2D/MouseJoint.cpp \
-Box2D/PrismaticJoint.cpp \
-Box2D/PulleyJoint.cpp \
-Box2D/RevoluteJoint.cpp \
-Box2D/ContactImpulse.cpp \
-Box2D/ContactImpulse.h \
-	Box2D/Collision/b2BroadPhase.cpp \
+	Box2D/Collision/b2BroadPhase.cpp\
 	Box2D/Collision/b2CollideCircle.cpp\
 	Box2D/Collision/b2CollideEdge.cpp\
 	Box2D/Collision/b2CollidePolygon.cpp\
@@ -78,8 +59,27 @@ Box2D/ContactImpulse.h \
 	Box2D/Dynamics/Joints/b2RopeJoint.cpp\
 	Box2D/Dynamics/Joints/b2WeldJoint.cpp\
 	Box2D/Dynamics/Joints/b2WheelJoint.cpp\
-	Box2D/Rope/b2Rope.cpp
-
-# TODO Updated JNI wrapper sources need to be added to the list above
+	Box2D/Rope/b2Rope.cpp\
+	com.badlogic.gdx.physics.box2d.Body.cpp\
+	com.badlogic.gdx.physics.box2d.ChainShape.cpp\
+	com.badlogic.gdx.physics.box2d.CircleShape.cpp\
+	com.badlogic.gdx.physics.box2d.Contact.cpp\
+	com.badlogic.gdx.physics.box2d.ContactImpulse.cpp\
+	com.badlogic.gdx.physics.box2d.EdgeShape.cpp\
+	com.badlogic.gdx.physics.box2d.Fixture.cpp\
+	com.badlogic.gdx.physics.box2d.Joint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.DistanceJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.FrictionJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.GearJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.MouseJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.PrismaticJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.PulleyJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.RevoluteJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.RopeJoint.cpp\
+	com.badlogic.gdx.physics.box2d.joints.WheelJoint.cpp\
+	com.badlogic.gdx.physics.box2d.Manifold.cpp\
+	com.badlogic.gdx.physics.box2d.PolygonShape.cpp\
+	com.badlogic.gdx.physics.box2d.Shape.cpp\
+	com.badlogic.gdx.physics.box2d.World.cpp
 
 include $(BUILD_SHARED_LIBRARY)

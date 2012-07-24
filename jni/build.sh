@@ -1,7 +1,7 @@
 #! /bin/sh
 
-NDK_DIRECTORY="/cygdrive/d/android-ndk-r8/"
-PROJECT_DIRECTORY="/cygdrive/d/RZ2Projects/Other/AndEngine/ptekchand/AndEnginePhysicsBox2DExtension/"
+NDK_DIRECTORY="/Users/ngramlich/SDKs/Android/ndk/r6b/"
+PROJECT_DIRECTORY="/Users/ngramlich/Workspace/gdk/graphic_engines/AndEngine/AndEnginePhysicsBox2DExtension/"
 
 # Run build:
 cd ${PROJECT_DIRECTORY}

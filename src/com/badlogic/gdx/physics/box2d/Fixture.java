@@ -18,7 +18,7 @@ package com.badlogic.gdx.physics.box2d;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
-import com.badlogic.gdx.utils.GdxRuntimeException;
+//import com.badlogic.gdx.utils.GdxRuntimeException; // Unchecked
 
 public class Fixture {
 	/*JNI
@@ -64,7 +64,7 @@ public class Fixture {
 		case 3:
 			return Type.Chain;
 		default:
-			throw new GdxRuntimeException("Unknown shape type!");
+			throw new RuntimeException("GdxRuntimeException: Unknown shape type!");
 		}
 	}
 
@@ -86,7 +86,7 @@ public class Fixture {
 	public Shape getShape () {
 		if (shape == null) {
 			long shapeAddr = jniGetShape(addr);
-			if (shapeAddr == 0) throw new GdxRuntimeException("Null shape address!");
+			if (shapeAddr == 0) throw new RuntimeException("GdxRuntimeException: Null shape address!");
 			int type = Shape.jniGetType(shapeAddr);
 
 			switch (type) {
@@ -103,7 +103,7 @@ public class Fixture {
 				shape = new ChainShape(shapeAddr);
 				break;
 			default:
-				throw new GdxRuntimeException("Unknown shape type!");
+				throw new RuntimeException("GdxRuntimeException: Unknown shape type!");
 			}
 		}
 

@@ -241,16 +241,16 @@ public final class Vector2 {
 		return tmp.set(this);
 	}
 	
-	/** Multiplies this vector by the given matrix
-	 * @param mat the matrix
-	 * @return this vector */
-	public Vector2 mul (Matrix3 mat) {
-		float x = this.x * mat.val[0] + this.y * mat.val[3] + mat.val[6];
-		float y = this.x * mat.val[1] + this.y * mat.val[4] + mat.val[7];
-		this.x = x;
-		this.y = y;
-		return this;
-	}
+//	/** Multiplies this vector by the given matrix
+//	 * @param mat the matrix
+//	 * @return this vector */
+//	public Vector2 mul (Matrix3 mat) {
+//		float x = this.x * mat.val[0] + this.y * mat.val[3] + mat.val[6];
+//		float y = this.x * mat.val[1] + this.y * mat.val[4] + mat.val[7];
+//		this.x = x;
+//		this.y = y;
+//		return this;
+//	}
 	/** Calculates the 2D cross product between this and the given vector.
 	 * @param v the other vector
 	 * @return The cross product
@@ -269,30 +269,30 @@ public final class Vector2 {
 		return this.x * y - this.y * x;
 	}
 
-	/** @return the angle in degrees of this vector (point) relative to the x-axis. Angles are counter-clockwise and between 0 and
-	 *         360. */
-	public float angle () {
-		float angle = (float)Math.atan2(y, x) * MathUtils.radiansToDegrees;
-		if (angle < 0) angle += 360;
-		return angle;
-	}
+//	/** @return the angle in degrees of this vector (point) relative to the x-axis. Angles are counter-clockwise and between 0 and
+//	 *         360. */
+//	public float angle () {
+//		float angle = (float)Math.atan2(y, x) * MathUtils.radiansToDegrees;
+//		if (angle < 0) angle += 360;
+//		return angle;
+//	}
 
-	/** Rotates the Vector2 by the given angle, counter-clockwise.
-	 * @param angle the angle in degrees
-	 * @return the */
-	public Vector2 rotate (float angle) {
-		float rad = angle * MathUtils.degreesToRadians;
-		float cos = (float)Math.cos(rad);
-		float sin = (float)Math.sin(rad);
-
-		float newX = this.x * cos - this.y * sin;
-		float newY = this.x * sin + this.y * cos;
-
-		this.x = newX;
-		this.y = newY;
-
-		return this;
-	}
+//	/** Rotates the Vector2 by the given angle, counter-clockwise.
+//	 * @param angle the angle in degrees
+//	 * @return the */
+//	public Vector2 rotate (float angle) {
+//		float rad = angle * MathUtils.degreesToRadians;
+//		float cos = (float)Math.cos(rad);
+//		float sin = (float)Math.sin(rad);
+//
+//		float newX = this.x * cos - this.y * sin;
+//		float newY = this.x * sin + this.y * cos;
+//
+//		this.x = newX;
+//		this.y = newY;
+//
+//		return this;
+//	}
 
 	/** Linearly interpolates between this vector and the target vector by alpha which is in the range [0,1]. The result is stored
 	 * in this vector.
@@ -306,30 +306,30 @@ public final class Vector2 {
 		return r;
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + NumberUtils.floatToIntBits(x);
-		result = prime * result + NumberUtils.floatToIntBits(y);
-		return result;
-	}
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + NumberUtils.floatToIntBits(x);
+//		result = prime * result + NumberUtils.floatToIntBits(y);
+//		return result;
+//	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Vector2 other = (Vector2) obj;
-		if (NumberUtils.floatToIntBits(x) != NumberUtils.floatToIntBits(other.x))
-			return false;
-		if (NumberUtils.floatToIntBits(y) != NumberUtils.floatToIntBits(other.y))
-			return false;
-		return true;
-	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		Vector2 other = (Vector2) obj;
+//		if (NumberUtils.floatToIntBits(x) != NumberUtils.floatToIntBits(other.x))
+//			return false;
+//		if (NumberUtils.floatToIntBits(y) != NumberUtils.floatToIntBits(other.y))
+//			return false;
+//		return true;
+//	}
 
 	/**
 	 * Compares this vector with the other vector, using the supplied

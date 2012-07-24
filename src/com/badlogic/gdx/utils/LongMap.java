@@ -692,12 +692,12 @@ public class LongMap<V> {
 		}
 
 		/** Returns a new array containing the remaining values. */
-		public Array<V> toArray () {
-			Array array = new Array(true, map.size);
-			while (hasNext)
-				array.add(next());
-			return array;
-		}
+//		public Array<V> toArray () {
+//			Array array = new Array(true, map.size);
+//			while (hasNext)
+//				array.add(next());
+//			return array;
+//		}
 	}
 
 	static public class Keys extends MapIterator {
@@ -713,11 +713,11 @@ public class LongMap<V> {
 		}
 
 		/** Returns a new array containing the remaining values. */
-		public LongArray toArray () {
-			LongArray array = new LongArray(true, map.size);
-			while (hasNext)
-				array.add(next());
-			return array;
-		}
+//		public LongArray toArray () {
+//			LongArray array = new LongArray(true, map.size);
+//			while (hasNext)
+//				array.add(next());
+//			return array;
+//		}
 	}
 }
