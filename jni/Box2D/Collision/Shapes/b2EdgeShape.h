@@ -51,6 +51,12 @@ public:
 	/// @see b2Shape::ComputeMass
 	void ComputeMass(b2MassData* massData, float32 density) const;
 	
+    /// @see b2Shape::ComputeSubmergedArea
+	float32 ComputeSubmergedArea(const b2Vec2& normal,
+								 float32 offset,
+								 const b2Transform& xf, 
+								 b2Vec2* c) const;
+    
 	/// These are the edge vertices
 	b2Vec2 m_vertex1, m_vertex2;
 

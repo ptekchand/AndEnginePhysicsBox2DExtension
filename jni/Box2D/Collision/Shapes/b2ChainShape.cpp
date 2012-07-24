@@ -169,3 +169,12 @@ void b2ChainShape::ComputeMass(b2MassData* massData, float32 density) const
 	massData->center.SetZero();
 	massData->I = 0.0f;
 }
+float32 b2ChainShape::ComputeSubmergedArea(const b2Vec2& normal,
+											float32 offset,
+											const b2Transform& xf, 
+											b2Vec2* c) const
+{
+	b2Assert(false && "Not implemented");
+	// TODO: ComputeSubmergedArea
+	return 0.0f;
+}

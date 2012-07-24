@@ -41,9 +41,11 @@ b2World::b2World(const b2Vec2& gravity, bool doSleep)
 
 	m_bodyList = NULL;
 	m_jointList = NULL;
-
+    m_controllerList = NULL;
+	
 	m_bodyCount = 0;
 	m_jointCount = 0;
+    m_controllerCount = 0;
 
 	m_warmStarting = true;
 	m_continuousPhysics = true;
@@ -165,6 +167,16 @@ void b2World::DestroyBody(b2Body* b)
 	}
 	b->m_contactList = NULL;
 
+    //Detach controllers attached to this body
+	b2ControllerEdge* control_e = b->m_controllerList;
+	while(control_e)
+	{
+		b2ControllerEdge* control_e0 = control_e;
+		control_e = control_e->nextController;
+		
+		control_e0->controller->RemoveBody(b);
+	}
+    
 	// Delete the attached fixtures. This destroys broad-phase proxies.
 	b2Fixture* f = b->m_fixtureList;
 	while (f)
@@ -382,12 +394,53 @@ void b2World::SetAllowSleeping(bool flag)
 	}
 }
 
+b2Controller* b2World::CreateController(b2ControllerDef* def)
+{
+	b2Controller* controller = def->Create(&m_blockAllocator);
+	
+	controller->m_next = m_controllerList;
+	controller->m_prev = NULL;
+    
+	if(m_controllerList)
+		m_controllerList->m_prev = controller;
+    
+	m_controllerList = controller;
+	++m_controllerCount;
+	
+	controller->m_world = this;
+	
+	return controller;
+}
+
+void b2World::DestroyController(b2Controller* controller)
+{
+	b2Assert(m_controllerCount>0);
+    
+	if(controller->m_next)
+		controller->m_next->m_prev = controller->m_prev;
+    
+	if(controller->m_prev)
+		controller->m_prev->m_next = controller->m_next;
+    
+	if(controller == m_controllerList)
+		m_controllerList = controller->m_next;
+    
+	--m_controllerCount;
+	
+	b2Controller::Destroy(controller, &m_blockAllocator);
+}
+
 // Find islands, integrate and solve constraints, solve position constraints
 void b2World::Solve(const b2TimeStep& step)
 {
 	m_profile.solveInit = 0.0f;
 	m_profile.solveVelocity = 0.0f;
 	m_profile.solvePosition = 0.0f;
+
+    for(b2Controller* controller = m_controllerList; controller; controller=controller->m_next)
+	{
+		controller->Step(step);
+	}
 
 	// Size the island for the worst case.
 	b2Island island(m_bodyCount,
@@ -578,6 +631,11 @@ void b2World::SolveTOI(const b2TimeStep& step)
 {
 	b2Island island(2 * b2_maxTOIContacts, b2_maxTOIContacts, 0, &m_stackAllocator, m_contactManager.m_contactListener);
 
+    for(b2Controller* controller = m_controllerList; controller; controller=controller->m_next)
+	{
+		controller->Step(step);
+	}
+    
 	if (m_stepComplete)
 	{
 		for (b2Body* b = m_bodyList; b; b = b->m_next)
@@ -1180,6 +1238,14 @@ void b2World::DrawDebugData()
 		}
 	}
 
+    if (flags & b2Draw::e_controllerBit)
+    {
+        for (b2Controller* c = m_controllerList; c; c= c->GetNext())
+        {
+            c->Draw(m_debugDraw);
+        }
+    }
+    
 	if (flags & b2Draw::e_pairBit)
 	{
 		b2Color color(0.3f, 0.9f, 0.9f);

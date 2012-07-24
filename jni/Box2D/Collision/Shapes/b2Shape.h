@@ -89,6 +89,16 @@ public:
 	/// @param density the density in kilograms per meter squared.
 	virtual void ComputeMass(b2MassData* massData, float32 density) const = 0;
 
+    /// @param normal the surface normal
+	/// @param offset the surface offset along normal
+	/// @param xf the shape transform
+	/// @param c returns the centroid
+	/// @return the total volume less than offset along normal
+	virtual float32 ComputeSubmergedArea(const b2Vec2& normal,
+										 float32 offset,
+										 const b2Transform& xf, 
+										 b2Vec2* c) const = 0;
+    
 	Type m_type;
 	float32 m_radius;
 };

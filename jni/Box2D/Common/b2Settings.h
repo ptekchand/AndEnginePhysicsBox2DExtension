@@ -36,6 +36,10 @@ typedef unsigned int uint32;
 typedef float float32;
 typedef double float64;
 
+#ifndef FLT_EPSILON
+    #define FLT_EPSILON 0.00007f 
+#endif
+
 #define	b2_maxFloat		FLT_MAX
 #define	b2_epsilon		FLT_EPSILON
 #define b2_pi			3.14159265359f

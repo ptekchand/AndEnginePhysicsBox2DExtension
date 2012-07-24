@@ -48,6 +48,8 @@ LOCAL_SRC_FILES := \
 	Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact.cpp\
 	Box2D/Dynamics/Contacts/b2PolygonAndCircleContact.cpp\
 	Box2D/Dynamics/Contacts/b2PolygonContact.cpp\
+	Box2D/Dynamics/Controllers/b2Controller.cpp\
+	Box2D/Dynamics/Controllers/b2BuoyancyController.cpp\
 	Box2D/Dynamics/Joints/b2DistanceJoint.cpp\
 	Box2D/Dynamics/Joints/b2FrictionJoint.cpp\
 	Box2D/Dynamics/Joints/b2GearJoint.cpp\

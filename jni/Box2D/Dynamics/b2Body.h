@@ -22,6 +22,7 @@
 #include "Box2D/Common/b2Math.h"
 #include "Box2D/Collision/Shapes/b2Shape.h"
 #include <new>
+#include "Box2D/Dynamics/Controllers/b2Controller.h"
 
 class b2Fixture;
 class b2Joint;
@@ -31,6 +32,7 @@ class b2World;
 struct b2FixtureDef;
 struct b2JointEdge;
 struct b2ContactEdge;
+struct b2ControllerEdge;
 
 /// The body type.
 /// static: zero mass, zero velocity, may be manually moved
@@ -355,6 +357,10 @@ public:
 	b2JointEdge* GetJointList();
 	const b2JointEdge* GetJointList() const;
 
+    /// Get the list of all controllers attached to this body.
+	b2ControllerEdge* GetControllerList();
+    const b2ControllerEdge* GetControllerList() const;
+
 	/// Get the list of all contacts attached to this body.
 	/// @warning this list changes during the time step and you may
 	/// miss some collisions if you don't use b2ContactListener.
@@ -396,6 +402,7 @@ private:
 	friend class b2WeldJoint;
 	friend class b2FrictionJoint;
 	friend class b2RopeJoint;
+    friend class b2Controller;
 
 	// m_flags
 	enum
@@ -445,6 +452,8 @@ private:
 
 	b2JointEdge* m_jointList;
 	b2ContactEdge* m_contactList;
+
+    b2ControllerEdge* m_controllerList;
 
 	float32 m_mass, m_invMass;
 
@@ -710,6 +719,16 @@ inline b2JointEdge* b2Body::GetJointList()
 inline const b2JointEdge* b2Body::GetJointList() const
 {
 	return m_jointList;
+}
+
+inline b2ControllerEdge* b2Body::GetControllerList()
+{
+	return m_controllerList;
+}
+
+inline const b2ControllerEdge* b2Body::GetControllerList() const
+{
+	return m_controllerList;
 }
 
 inline b2ContactEdge* b2Body::GetContactList()
