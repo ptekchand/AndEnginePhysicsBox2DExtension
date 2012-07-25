@@ -626,7 +626,7 @@ b2ContactFilter defaultFilter;
 		b2BuoyancyControllerDef def;
 
 		def.normal.Set(normalX, normalY);
-		def.offset = offset
+		def.offset = offset;
 		def.density = density;
 		def.velocity.Set(velocityX, velocityY);
 		def.linearDrag = linearDrag;
@@ -648,7 +648,7 @@ b2ContactFilter defaultFilter;
 
 	private native void jniDestroyController (long addr, long controllerAddr); /*
 		b2World* world = (b2World*)addr;
-		b2Controller* controller = (b2Joint*)controllerAddr;
+		b2Controller* controller = (b2Controller*)controllerAddr;
 		world->DestroyController( controller );
 	*/
 

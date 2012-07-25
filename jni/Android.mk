@@ -67,6 +67,7 @@ LOCAL_SRC_FILES := \
 	com.badlogic.gdx.physics.box2d.CircleShape.cpp\
 	com.badlogic.gdx.physics.box2d.Contact.cpp\
 	com.badlogic.gdx.physics.box2d.ContactImpulse.cpp\
+	com.badlogic.gdx.physics.box2d.Controller.cpp\
 	com.badlogic.gdx.physics.box2d.EdgeShape.cpp\
 	com.badlogic.gdx.physics.box2d.Fixture.cpp\
 	com.badlogic.gdx.physics.box2d.Joint.cpp\

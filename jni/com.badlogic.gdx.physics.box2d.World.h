@@ -129,6 +129,22 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniDestroyJoint
 
 /*
  * Class:     com_badlogic_gdx_physics_box2d_World
+ * Method:    jniCreateBuoyancyController
+ * Signature: (JFFFFFFFFZZFF)J
+ */
+JNIEXPORT jlong JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniCreateBuoyancyController
+  (JNIEnv *, jobject, jlong, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jboolean, jboolean, jfloat, jfloat);
+
+/*
+ * Class:     com_badlogic_gdx_physics_box2d_World
+ * Method:    jniDestroyController
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniDestroyController
+  (JNIEnv *, jobject, jlong, jlong);
+
+/*
+ * Class:     com_badlogic_gdx_physics_box2d_World
  * Method:    jniStep
  * Signature: (JFII)V
  */
