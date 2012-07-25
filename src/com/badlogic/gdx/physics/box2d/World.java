@@ -42,6 +42,10 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJoint;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WheelJoint;
 import com.badlogic.gdx.physics.box2d.joints.WheelJointDef;
+import com.badlogic.gdx.physics.box2d.ControllerDef.ControllerType;
+import com.badlogic.gdx.physics.box2d.controllers.BuoyancyController;
+import com.badlogic.gdx.physics.box2d.controllers.BuoyancyControllerDef;
+
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.LongMap;
 import com.badlogic.gdx.utils.Pool;
@@ -207,6 +211,9 @@ b2ContactFilter defaultFilter;
 
 	/** all known joints **/
 	protected final LongMap<Joint> joints = new LongMap<Joint>(100);
+
+	/** all known controllers **/
+	protected final LongMap<Controller> controllers = new LongMap<Controller>(10);
 
 	/** Contact filter **/
 	protected ContactFilter contactFilter = null;
@@ -589,6 +596,60 @@ b2ContactFilter defaultFilter;
 		b2World* world = (b2World*)addr;
 		b2Joint* joint = (b2Joint*)jointAddr;
 		world->DestroyJoint( joint );
+	*/
+
+	/** Create a controller
+	 * @warning This function is locked during callbacks. [?] */
+	public Controller createController (ControllerDef def) {
+		long controllerAddr = createProperController(def);
+		Controller controller = null;
+		if (def.type == ControllerType.BuoyancyController) controller = new BuoyancyController(this, controllerAddr);
+		if (controller != null) controllers.put(controller.addr, controller);
+
+		return controller;
+	}
+
+	private long createProperController (ControllerDef def) {
+		if (def.type == ControllerType.BuoyancyController) {
+			BuoyancyControllerDef d = (BuoyancyControllerDef)def;
+			return jniCreateBuoyancyController(addr, d.normal.x, d.normal.y, d.offset, d.density, d.velocity.x, d.velocity.y,
+					d.linearDrag, d.angularDrag, d.useDensity, d.useWorldGravity, d.gravity.x, d.gravity.y);
+		}
+
+		return 0;
+	}
+
+	private native long jniCreateBuoyancyController (long addr, float normalX, float normalY, float offset, float density,
+			float velocityX, float velocityY, float linearDrag, float angularDrag, boolean useDensity, boolean useWorldGravity,
+			float gravityX, float gravityY); /*
+		b2World* world = (b2World*)addr;
+		b2BuoyancyControllerDef def;
+
+		def.normal.Set(normalX, normalY);
+		def.offset = offset
+		def.density = density;
+		def.velocity.Set(velocityX, velocityY);
+		def.linearDrag = linearDrag;
+		def.angularDrag = angularDrag;
+		def.useDensity = useDensity;
+		def.useWorldGravity = useWorldGravity;
+		def.gravity.Set(gravityX, gravityY);
+    
+		//bc = (b2BuoyancyController *)world->CreateController(&def);
+		return (jlong)world->CreateController(&def);
+	*/
+
+	/** Destroy a joint. This may cause the connected bodies to begin colliding.
+	 * @warning This function is locked during callbacks. [?] */
+	public void DestroyController (Controller controller) {
+		controllers.remove(controller.addr);
+		jniDestroyController(addr, controller.addr);
+	}
+
+	private native void jniDestroyController (long addr, long controllerAddr); /*
+		b2World* world = (b2World*)addr;
+		b2Controller* controller = (b2Joint*)controllerAddr;
+		world->DestroyController( controller );
 	*/
 
 	/** Take a time step. This performs collision detection, integration, and constraint solution.
