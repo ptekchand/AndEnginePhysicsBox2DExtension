@@ -16,7 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -125,6 +127,34 @@ public class PhysicsFactory {
 		return boxBody;
 	}
 
+
+	public static Body createChainBody(final PhysicsWorld pPhysicsWorld, final Vector2[] vertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		return PhysicsFactory.createChainBody(pPhysicsWorld, 0, 0, vertices, 0, pBodyType, pFixtureDef, pPixelToMeterRatio);
+	}
+
+	public static Body createChainBody(final PhysicsWorld pPhysicsWorld, final float pCenterX, final float pCenterY, final Vector2[] vertices, final float pRotation, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		final BodyDef chainBodyDef = new BodyDef();
+		chainBodyDef.type = pBodyType;
+
+		chainBodyDef.position.x = pCenterX / pPixelToMeterRatio;
+		chainBodyDef.position.y = pCenterY / pPixelToMeterRatio;
+
+		chainBodyDef.angle = MathUtils.degToRad(pRotation);
+
+		final Body chainBody = pPhysicsWorld.createBody(chainBodyDef);
+
+		final ChainShape chainPoly = new ChainShape();
+		pFixtureDef.shape = chainPoly;
+
+		chainPoly.createChain(vertices);
+
+		chainBody.createFixture(pFixtureDef);
+
+		chainPoly.dispose();
+
+		return chainBody;
+	}
+
 	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
 		return PhysicsFactory.createCircleBody(pPhysicsWorld, pAreaShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
@@ -172,44 +202,33 @@ public class PhysicsFactory {
 		return circleBody;
 	}
 
-// Line types were removed from Box2D 2.2.1 (Must create a box?)
-//	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final Line pLine, final FixtureDef pFixtureDef) {
-//		return PhysicsFactory.createLineBody(pPhysicsWorld, pLine, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
-//	}
-//
-//	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final Line pLine, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-//		final float[] sceneCoordinates = pLine.convertLocalToSceneCoordinates(0, 0);
-//		final float x1 = sceneCoordinates[Constants.VERTEX_INDEX_X];
-//		final float y1 = sceneCoordinates[Constants.VERTEX_INDEX_Y];
-//		
-//		pLine.convertLocalToSceneCoordinates(pLine.getX2() - pLine.getX1(), pLine.getY2() - pLine.getY1());
-//		final float x2 = sceneCoordinates[Constants.VERTEX_INDEX_X];
-//		final float y2 = sceneCoordinates[Constants.VERTEX_INDEX_Y];
-//		
-//		return PhysicsFactory.createLineBody(pPhysicsWorld, x1, y1, x2, y2, pFixtureDef, pPixelToMeterRatio);
-//	}
-//	
-//	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final float pX1, final float pY1, final float pX2, final float pY2, final FixtureDef pFixtureDef) {
-//		return PhysicsFactory.createLineBody(pPhysicsWorld, pX1, pY1, pX2, pY2, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
-//	}
-//
-//	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final float pX1, final float pY1, final float pX2, final float pY2, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-//		final BodyDef lineBodyDef = new BodyDef();
-//		lineBodyDef.type = BodyType.StaticBody;
-//		
-//		final Body boxBody = pPhysicsWorld.createBody(lineBodyDef);
-//		
-//		final PolygonShape linePoly = new PolygonShape();
-//		
-//		linePoly.setAsEdge(new Vector2(pX1 / pPixelToMeterRatio, pY1 / pPixelToMeterRatio), new Vector2(pX2 / pPixelToMeterRatio, pY2 / pPixelToMeterRatio));
-//		pFixtureDef.shape = linePoly;
-//		
-//		boxBody.createFixture(pFixtureDef);
-//		
-//		linePoly.dispose();
-//		
-//		return boxBody;
-//	}
+	// Line types were removed from Box2D 2.2.1. An Edge might be used instead.
+	public static Body createEdgeBody(final PhysicsWorld pPhysicsWorld, final Vector2 v1, final Vector2 v2, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		return PhysicsFactory.createEdgeBody(pPhysicsWorld, 0, 0, v1, v2, 0, pBodyType, pFixtureDef, pPixelToMeterRatio);
+	}
+
+	public static Body createEdgeBody(final PhysicsWorld pPhysicsWorld, final float pCenterX, final float pCenterY, final Vector2 v1, final Vector2 v2, final float pRotation, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		final BodyDef edgeBodyDef = new BodyDef();
+		edgeBodyDef.type = pBodyType;
+
+		edgeBodyDef.position.x = pCenterX / pPixelToMeterRatio;
+		edgeBodyDef.position.y = pCenterY / pPixelToMeterRatio;
+
+		edgeBodyDef.angle = MathUtils.degToRad(pRotation);
+
+		final Body edgeBody = pPhysicsWorld.createBody(edgeBodyDef);
+
+		final EdgeShape edgePoly = new EdgeShape();
+		pFixtureDef.shape = edgePoly;
+
+		edgePoly.set(v1, v2);
+
+		edgeBody.createFixture(pFixtureDef);
+
+		edgePoly.dispose();
+
+		return edgeBody;
+	}
 
 	/**
 	 * @param pPhysicsWorld
