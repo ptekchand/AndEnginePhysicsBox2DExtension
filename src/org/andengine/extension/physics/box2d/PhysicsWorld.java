@@ -12,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Controller;
+import com.badlogic.gdx.physics.box2d.ControllerDef;
 import com.badlogic.gdx.physics.box2d.DestructionListener;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
@@ -140,6 +142,10 @@ public class PhysicsWorld implements IUpdateHandler {
 	public Joint createJoint(final JointDef pDef) {
 		return this.mWorld.createJoint(pDef);
 	}
+	
+	public Controller createController(final ControllerDef pDef) {
+		return this.mWorld.createController(pDef);
+	}
 
 	public void destroyBody(final Body pBody) {
 		this.mWorld.destroyBody(pBody);
@@ -147,6 +153,10 @@ public class PhysicsWorld implements IUpdateHandler {
 
 	public void destroyJoint(final Joint pJoint) {
 		this.mWorld.destroyJoint(pJoint);
+	}
+
+	public void destroyController(final Controller pController) {
+		this.mWorld.destroyController(pController);
 	}
 
 	public void dispose() {

@@ -641,7 +641,7 @@ b2ContactFilter defaultFilter;
 
 	/** Destroy a joint. This may cause the connected bodies to begin colliding.
 	 * @warning This function is locked during callbacks. [?] */
-	public void DestroyController (Controller controller) {
+	public void destroyController (Controller controller) {
 		controllers.remove(controller.addr);
 		jniDestroyController(addr, controller.addr);
 	}
